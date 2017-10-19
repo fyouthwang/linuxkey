@@ -2,3 +2,19 @@ ssh-keygen -t rsa
 
 此时在/root/.ssh/目录下生成了2个文件，id_rsa为私钥，id_rsa.pub为公钥。
 私钥自己下载到本地电脑妥善保存（丢了服务器可就没法再登陆了），为安全，建议删除服务器端的私钥。公钥则可以任意公开。
+
+使用以下命令将公钥导入到：
+cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+
+修改SSH的配置文件/etc/ssh/sshd_config :
+PermitRootLogin no //禁止root
+
+#RSAAuthentication yes
+#PubkeyAuthentication yes
+#AuthorizedKeysFile .ssh/authorized_keys
+去调上面3行前面的#，保存后重启SSH服务。
+修改SSH的配置文件/etc/ssh/sshd_config，找到下面1行：
+PasswordAuthentication yes
+修改为：
+PasswordAuthentication no
+保存后重启SSH服务
